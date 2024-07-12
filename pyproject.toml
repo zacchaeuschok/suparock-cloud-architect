@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "image-search"
+name = "aws-supabse"
 version = "0.1.0"
 description = "Image Search with Supabase Vector"
 authors = ["thorwebdev <thor@supabase.io>"]
@@ -26,7 +26,8 @@ pypdf = "^4.2.0"
 [tool.poetry.scripts]
 seed_image = "image_search.main:seed"
 seed_text = "doc_search.main:seed"
-search = "image_search.main:search"
+search_image = "image_search.main:search"
+search_text = "doc_search.main:search"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^70.3.0"

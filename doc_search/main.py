@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict
+from typing import Any, Dict, Optional
 
 import boto3
 import vecs
@@ -181,7 +181,7 @@ def seed():
     print("Created index")
 
 
-def main():
+def search(query_term: Optional[str] = None):
     agent_runnable = construct_agent()
     chain = create_graph_workflow(agent_runnable)
     config = {
@@ -189,7 +189,7 @@ def main():
     }
     result = chain.invoke(
         {
-            "input": "Should I use a single or multiple AWS accounts?",
+            "input": query_term,
             "intermediate_steps": [],
         },
         config=config
@@ -199,4 +199,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    search("Should I use a single or multiple AWS accounts?")
