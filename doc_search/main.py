@@ -46,9 +46,7 @@ def well_arch_tool_function(query: str) -> Dict[str, Any]:
     results = documents.query(
         data=query_emb,
         limit=5,
-        filters={
-            "type": {"$eq": "doc"}
-        },
+        include_value=True
     )
 
     # Format results for output
