@@ -2,9 +2,11 @@ import json
 from typing import Any, Dict
 
 import vecs
+from langchain_community.tools import ShellTool
 from langchain_core.tools import StructuredTool
 
-from model.config import DB_CONNECTION
+from src.model.config import DB_CONNECTION
+from src.model.embedding import get_embedding_from_titan_text
 
 
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
@@ -35,34 +37,36 @@ well_arch_tool = StructuredTool.from_function(
 )
 
 
-def cost_analysis_tool_function(query: str) -> Dict[str, Any]:
-    print("Running cost analysis tool")
-    """Executes AWS CLI commands to fetch and analyze AWS cost data based on the specified query."""
+def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
+    """
+    Executes specified AWS CLI commands and returns the parsed JSON response.
+
+    Args:
+    cli_command (str): A valid AWS CLI command formatted as a string.
+
+    Returns:
+    Dict[str, Any]: The JSON parsed output of the AWS CLI command.
+    """
+    print("Running AWS CLI command")
+
     # Initialize the ShellTool
     shell_tool = ShellTool()
 
-    # Define the AWS CLI command to fetch cost data
-    aws_cli_command = """
-    aws ce get-cost-and-usage --time-period Start=2024-07-01,End=2024-07-31 --granularity MONTHLY --metrics "BlendedCost" "UsageQuantity"
-    """
-
     # Execute the command using ShellTool
-    result = shell_tool.run(tool_input={"commands": [aws_cli_command]})
+    result = shell_tool.run(tool_input={"commands": [cli_command]})
 
     # Assuming result is returned as a JSON string from the command
     parsed_result = json.loads(result) if type(result) is str else result
 
-    # Format the result for output
-    resp_json = {"cost_data": parsed_result}  # Use the parsed result directly
-
-    return resp_json
+    # Return the parsed result directly
+    return {"aws_data": parsed_result}
 
 
 # Create a StructuredTool from the function
-cost_analysis_tool = StructuredTool.from_function(
-    func=cost_analysis_tool_function,
+aws_cli_tool = StructuredTool.from_function(
+    func=aws_cli_tool_function,
     name="Cost Analysis Tool",
-    description="Analyzes AWS costs and usage to provide insights and recommendations.",
+    description="Runs AWS CLI commands",
 )
 
-TOOLS = [well_arch_tool, cost_analysis_tool]
+TOOLS = [well_arch_tool, aws_cli_tool]

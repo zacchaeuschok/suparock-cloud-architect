@@ -1,6 +1,6 @@
 import json
 
-from model.config import bedrock_runtime
+from src.model.config import bedrock_runtime
 
 
 def get_embedding_from_titan_text(body) -> list:

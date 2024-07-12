@@ -4,8 +4,8 @@ import sys
 
 import vecs
 
-from model.config import DB_CONNECTION
-from model.embedding import get_embedding_from_titan_multimodal
+from src.model.config import DB_CONNECTION
+from src.model.embedding import get_embedding_from_titan_multimodal
 
 
 def readFileAsBase64(file_path):

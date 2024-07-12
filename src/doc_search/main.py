@@ -1,6 +1,6 @@
 from typing import Optional
 
-from doc_search.agent import construct_agent, create_graph_workflow
+from src.doc_search.agent import construct_agent, create_graph_workflow
 
 
 def search(query_term: Optional[str] = None):

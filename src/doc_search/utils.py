@@ -1,8 +1,8 @@
 import vecs
 from pypdf import PdfReader
 
-from model.config import DB_CONNECTION
-from model.embedding import get_embedding_from_titan_text
+from src.model.config import DB_CONNECTION
+from src.model.embedding import get_embedding_from_titan_text
 
 
 def extract_text_from_pdf(file_path):

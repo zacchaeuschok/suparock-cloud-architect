@@ -5,8 +5,8 @@ description = "Image Search with Supabase Vector"
 authors = ["thorwebdev <thor@supabase.io>"]
 readme = "README.md"
 packages = [
-    {include = "image_search"},
-    {include = "doc_search"},
+    {include = "src/image_search"},
+    {include = "src/doc_search"},
 ]
 
 [tool.poetry.dependencies]
@@ -25,10 +25,10 @@ pypdf = "^4.2.0"
 langchain-experimental = "^0.0.62"
 
 [tool.poetry.scripts]
-seed_image = "image_search.main:seed"
-seed_text = "doc_search.main:seed"
-search_image = "image_search.main:search"
-search_text = "doc_search.main:search"
+seed_image = "src.image_search.main:seed"
+seed_text = "src.doc_search.main:seed"
+search_image = "src.image_search.main:search"
+search_text = "src.doc_search.main:search"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^70.3.0"

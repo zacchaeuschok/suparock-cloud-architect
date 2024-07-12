@@ -5,8 +5,8 @@ from langchain_core.runnables import RunnablePassthrough
 from langgraph.constants import END
 from langgraph.graph import Graph
 
-from doc_search.tools import TOOLS
-from model.config import LLM
+from src.doc_search.tools import TOOLS
+from src.model.config import LLM
 
 
 def construct_agent():
@@ -44,9 +44,10 @@ def create_graph_workflow(agent_runnable):
 
 def execute_tools(data):
     agent_action = data.pop("agent_outcome")
+    print("Agent Action", agent_action)
     tool_to_use = {t.name: t for t in TOOLS}[agent_action.tool]
     observation = tool_to_use.invoke(agent_action.tool_input)
-    print(f"{agent_action}\n {observation}")
+    print("Observation", observation)
     data["intermediate_steps"].append((agent_action, observation))
     return data
 

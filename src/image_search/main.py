@@ -6,8 +6,8 @@ import vecs
 from matplotlib import image as mpimg
 from matplotlib import pyplot as plt
 
-from model.config import DB_CONNECTION
-from model.embedding import get_embedding_from_titan_multimodal
+from src.model.config import DB_CONNECTION
+from src.model.embedding import get_embedding_from_titan_multimodal
 
 
 def search(query_term: Optional[str] = None):
