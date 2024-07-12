@@ -1,0 +1,6 @@
+.env
+
+doc_search/__pycache__/*
+image_search/__pycache__/*
+bedrock/
+.idea/

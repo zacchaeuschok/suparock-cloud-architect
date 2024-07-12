@@ -1,0 +1,39 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.3.0
+    hooks:
+      - id: black
+        language_version: python3.11
+        exclude: '.*\.dylib$'
+
+  - repo: https://github.com/pycqa/isort
+    rev: 5.12.0  # Use the ref you want to point at
+    hooks:
+      - id: isort
+        args: ["--profile", "black"]
+        exclude: '.*\.dylib$'
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.0.1
+    hooks:
+      - id: trailing-whitespace
+        exclude: '.*\.dylib$'
+      - id: end-of-file-fixer
+        exclude: '.*\.dylib$'
+      - id: check-yaml
+        exclude: '.*\.dylib$'
+      - id: check-added-large-files
+        exclude: '.*\.dylib$'
+
+  - repo: https://github.com/hadialqattan/pycln
+    rev: v2.1.5
+    hooks:
+      - id: pycln
+        exclude: '.*\.dylib$'
+
+  - repo: https://github.com/myint/autoflake
+    rev: v1.4
+    hooks:
+      - id: autoflake
+        args: [ '--remove-all-unused-imports', '--remove-unused-variables', '--in-place', '--recursive' ]
+        exclude: '.*\.dylib$'
