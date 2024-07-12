@@ -1,6 +1,5 @@
 .env
 
-src/doc_search/__pycache__/*
-src/image_search/__pycache__/*
+**/__pycache__/*
 bedrock/
 .idea/
