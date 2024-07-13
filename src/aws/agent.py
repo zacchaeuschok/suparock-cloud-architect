@@ -58,7 +58,8 @@ def construct_agent():
            
            Therefore, your image path should be formatted with snake path and lowercase e.g. standard_kubernetes_ap.png
 
-        5.  You can suggest a suitable Amazon Web service based on the AWS Whitepaper Overview of Amazon Web Services 
+        5.  You can suggest a suitable Amazon Web service based on the AWS Whitepaper Overview of Amazon Web Services using the web_service_search_tool.
+            There is no need to refer to the AWS Well-Architected Framework using the well_arch_tool if the user is asking explicitly for a web service. 
             You should suggest the most relevant web services to help with the user input.
             You should consider the industry and organisation type of the user.
         """
