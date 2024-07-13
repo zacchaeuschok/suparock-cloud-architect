@@ -5,7 +5,7 @@ description = "Image Search with Supabase Vector"
 authors = ["thorwebdev <thor@supabase.io>"]
 readme = "README.md"
 packages = [
-    {include = "src/doc_search"},
+    {include = "src/aws"},
 ]
 
 [tool.poetry.dependencies]
@@ -25,8 +25,8 @@ langchain-experimental = "^0.0.62"
 streamlit = "^1.36.0"
 
 [tool.poetry.scripts]
-seed_text = "src.doc_search.main:seed"
-search_text = "src.doc_search.main:main"
+seed_text = "src.aws.main:seed"
+search_text = "src.aws.main:main"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^70.3.0"

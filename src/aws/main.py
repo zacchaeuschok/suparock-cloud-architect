@@ -1,7 +1,7 @@
 import sys
 from typing import Optional
 
-from src.aws_tool.agent import construct_agent
+from src.aws.agent import construct_agent
 
 
 def search(query_term: Optional[str] = None, callbacks=None):
