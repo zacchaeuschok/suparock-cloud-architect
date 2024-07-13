@@ -25,7 +25,7 @@ if st.sidebar.button('🔄 Reset Application'):
         os.remove(file_path)
     # Clear the session state
     st.session_state.messages = []
-    st.experimental_rerun()
+    st.rerun()
 
 # Initialize or retrieve chat history from session state
 if "messages" not in st.session_state:
