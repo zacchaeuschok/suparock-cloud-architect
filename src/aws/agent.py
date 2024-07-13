@@ -25,6 +25,8 @@ def construct_agent():
             curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
             sudo installer -pkg AWSCLIV2.pkg -target /
             
+            You do not need to run aws configure as the customer has already done this.
+            
             You have access to actual AWS CLI commands and can use them to retrieve information.
             Your commands should not include generic variables and must work without expecting user input.
             You should check that your commands are well-formed and correct.
