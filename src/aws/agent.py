@@ -25,6 +25,7 @@ def construct_agent():
             
             curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
             sudo installer -pkg AWSCLIV2.pkg -target /
+            aws --version
             
             You do not need to run aws configure as the customer has already done this.
             

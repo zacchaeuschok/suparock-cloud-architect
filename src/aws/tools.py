@@ -20,6 +20,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 shell_tool = ShellTool()
 python_repl = PythonREPL()
 
+
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
     vector_store = get_aws_documentation_vector_store()
 
