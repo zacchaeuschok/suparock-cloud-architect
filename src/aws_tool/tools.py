@@ -140,6 +140,7 @@ def aws_cloud_diagram_code_function(query: str) -> Dict[str, Any]:
         3. Do not add license information to the output code.
         4. Do not include colab code in the output.
         5. Ensure all the requirements in the question are met.
+        6. You should always name the diagram as "tmp" in your code.
 
         Question:
         {question}
