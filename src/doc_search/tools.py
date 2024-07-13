@@ -1,4 +1,5 @@
 import json
+import warnings
 from typing import Any, Dict
 
 import vecs
@@ -7,8 +8,6 @@ from langchain_core.tools import StructuredTool
 
 from src.model.config import DB_CONNECTION
 from src.model.embedding import get_embedding_from_titan_text
-
-import warnings
 
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -43,17 +42,41 @@ well_arch_tool = StructuredTool.from_function(
 
 
 def parse_aws_response(command, response):
-    """ Parses AWS CLI response, looking for JSON data or handling plain text. """
+    """Parses AWS CLI response, looking for JSON data or handling plain text."""
     if isinstance(response, str):
-        if 'error' in response:
-            return {'command': command, 'error': response}
+        if "error" in response:
+            return {"command": command, "error": response}
         try:
             parsed_response = json.loads(response)
-            return {'success': parsed_response}
+            return {"success": parsed_response}
         except json.JSONDecodeError:
-            return {'success': response}
+            return {"success": response}
     else:
-        return {'success': response}
+        return {"success": response}
+
+
+def ensure_quotes_balanced(cli_command: str) -> str:
+    """
+    Ensures that all quotes within the command are properly balanced.
+    If there is an odd number of quotes, it adds a closing quote at the end.
+
+    Args:
+    cli_command (str): The command to check.
+
+    Returns:
+    str: The potentially modified command with balanced quotes.
+    """
+    # Count the number of single and double quotes
+    single_quotes = cli_command.count("'")
+    double_quotes = cli_command.count('"')
+
+    # If odd, add an extra quote at the end to balance
+    if single_quotes % 2 != 0:
+        cli_command += "'"
+    if double_quotes % 2 != 0:
+        cli_command += '"'
+
+    return cli_command
 
 
 def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
@@ -69,13 +92,16 @@ def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     # Initialize the ShellTool
     shell_tool = ShellTool()
 
+    # Ensure the command is well-formed
+    safe_cli_command = ensure_quotes_balanced(cli_command)
+
     # Execute the command using ShellTool
-    result = shell_tool.run(tool_input={"commands": [cli_command]})
+    result = shell_tool.run(tool_input={"commands": [safe_cli_command]})
 
     # Assuming result is returned as a JSON string from the command
-    parsed_result = parse_aws_response(command=cli_command, response=result)
+    parsed_result = parse_aws_response(command=safe_cli_command, response=result)
 
-    return {"aws_data": parsed_result}
+    return parsed_result
 
 
 # Create a StructuredTool from the function
@@ -85,6 +111,4 @@ aws_cli_tool = StructuredTool.from_function(
     description="Runs AWS CLI commands",
 )
 
-DOC_TOOLS = [well_arch_tool]
-CLI_TOOLS = [aws_cli_tool]
-TOOLS = DOC_TOOLS + CLI_TOOLS
+TOOLS = [well_arch_tool, aws_cli_tool]

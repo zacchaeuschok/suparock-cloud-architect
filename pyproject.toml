@@ -23,6 +23,7 @@ langchainhub = "^0.1.20"
 langchain-aws = "^0.1.10"
 pypdf = "^4.2.0"
 langchain-experimental = "^0.0.62"
+streamlit = "^1.36.0"
 
 [tool.poetry.scripts]
 seed_image = "src.image_search.main:seed"

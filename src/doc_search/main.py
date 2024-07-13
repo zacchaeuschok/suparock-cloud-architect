@@ -3,30 +3,22 @@ from typing import Optional
 
 from langchain_core.exceptions import OutputParserException
 
-from src.doc_search.agent import construct_agent, create_graph_workflow
+from src.doc_search.agent import construct_agent
 
 
-def search(query_term: Optional[str] = None):
-    agent_runnable = construct_agent()
-    chain = create_graph_workflow(agent_runnable)
-    config = {"recursion_limit": 50}
-    try:
-        result = chain.invoke(
-            {
-                "input": query_term,
-                "intermediate_steps": [],
-            },
-            config=config,
-        )
-    except OutputParserException as e:
-        print(f"Error parsing output: {e}")
-        return
-    try:
-        output = result["agent_outcome"].return_values["output"]
-    except AttributeError:
-        print(result["agent_outcome"])
-        output = "No output found."
-    print(output)
+def search(query_term: Optional[str] = None, callbacks=None):
+    agent_executor = construct_agent()
+    config = {"recursion_limit": 10}
+    result = agent_executor.invoke(
+        {
+            "input": query_term,
+        },
+        config={
+            'callbacks': callbacks,
+            **config
+        }
+    )
+    return result
 
 
 def main():
