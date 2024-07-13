@@ -1,6 +1,8 @@
 import json
 
-from src.model.config import bedrock_runtime
+from langchain_aws import BedrockEmbeddings
+
+from src.model.config import bedrock_runtime, TEXT_EMBEDDING_MODEL_ID
 
 
 def get_embedding_from_titan_text(body) -> list:
@@ -8,7 +10,7 @@ def get_embedding_from_titan_text(body) -> list:
     encoded_body = json.dumps(body).encode("utf-8")
     response = bedrock_runtime.invoke_model(
         body=encoded_body,
-        modelId="amazon.titan-embed-text-v2:0",
+        modelId=TEXT_EMBEDDING_MODEL_ID,
         accept="application/json",
         contentType="application/json",
     )
@@ -28,3 +30,7 @@ def get_embedding_from_titan_multimodal(body):
     response_body = json.loads(response.get("body").read())
     print(response_body)
     return response_body["embedding"]
+
+
+def get_text_embedding_model():
+    return BedrockEmbeddings(model_id=TEXT_EMBEDDING_MODEL_ID)

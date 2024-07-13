@@ -3,11 +3,16 @@ import warnings
 from typing import Any, Dict
 
 import vecs
+from langchain.chains.retrieval_qa.base import RetrievalQA
+from langchain_aws import BedrockEmbeddings
 from langchain_community.tools import ShellTool
+from langchain_community.vectorstores import PGVector
+from langchain_core.prompts import PromptTemplate
+from langchain_experimental.utilities import PythonREPL
 from langchain_core.tools import StructuredTool
 
-from src.model.config import DB_CONNECTION
-from src.model.embedding import get_embedding_from_titan_text
+from src.model.config import DB_CONNECTION, LLM
+from src.model.embedding import get_embedding_from_titan_text, get_text_embedding_model
 
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -18,7 +23,7 @@ def well_arch_tool_function(query: str) -> Dict[str, Any]:
     # Create vector store client
     vx = vecs.create_client(DB_CONNECTION)
     # Get or create a collection of vectors
-    documents = vx.get_or_create_collection(name="document_vectors", dimension=1024)
+    documents = vx.get_or_create_collection(name="aws_documentation_vectors", dimension=1024)
 
     query_emb = get_embedding_from_titan_text(
         {
@@ -104,11 +109,71 @@ def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     return parsed_result
 
 
-# Create a StructuredTool from the function
 aws_cli_tool = StructuredTool.from_function(
     func=aws_cli_tool_function,
     name="AWS CLI Tool",
     description="Runs AWS CLI commands",
 )
 
-TOOLS = [well_arch_tool, aws_cli_tool]
+
+def aws_cloud_diagram_code_function(query: str) -> Dict[str, Any]:
+    embeddings = get_text_embedding_model()
+
+    vector_store = PGVector(
+        embedding_function=embeddings,
+        connection_string=DB_CONNECTION,
+        collection_name="diagrams_documentation_vectors",
+    )
+
+    retriever = vector_store.as_retriever(
+        search_type="mmr",
+        search_kwargs={'k': 5, 'fetch_k': 50},
+    )
+
+    # RAG template
+    prompt_RAG = """
+        You are a proficient python developer that specialises in generating AWS cloud diagrmas using the diagrams library. 
+        
+        Respond with the syntactically correct code for to the question below. Make sure you follow these rules:
+        1. Your response should only include Python code. Do not include any preamble or postamble in your response.
+        2. Use context to understand the diagrams library and how to use it & apply.
+        3. Do not add license information to the output code.
+        4. Do not include colab code in the output.
+        5. Ensure all the requirements in the question are met.
+
+        Question:
+        {question}
+
+        Context:
+        {context}
+
+        Generated Python Code :
+        """
+
+    prompt_RAG_tempate = PromptTemplate(
+        template=prompt_RAG, input_variables=["context", "question"]
+    )
+
+    qa_chain = RetrievalQA.from_llm(
+        llm=LLM, prompt=prompt_RAG_tempate, retriever=retriever, return_source_documents=True
+    )
+
+    response = qa_chain.invoke({"query": query})
+
+    return {"code": response}
+
+
+aws_cloud_diagram_code_tool = StructuredTool.from_function(
+    name="AWS Cloud Diagram Code Generation Tool",
+    description="Generates python code for cloud architecture diagrams based on the query",
+    func=aws_cloud_diagram_code_function,
+)
+
+
+python_interpeter_tool = StructuredTool.from_function(
+    func=PythonREPL().run,
+    name="Python Interpreter Tool",
+    description="Runs python code",
+)
+
+TOOLS = [well_arch_tool, aws_cli_tool, aws_cloud_diagram_code_tool, python_interpeter_tool]

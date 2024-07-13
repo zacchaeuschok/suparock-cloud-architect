@@ -15,7 +15,8 @@ avatars = {
 
 # Display chat messages from history
 for message in st.session_state.messages:
-    with st.chat_message(message["role"]):
+    role = message["role"]
+    with st.chat_message(role, avatar=avatars[role]):
         st.markdown(message["content"])
 
 # Handle user input

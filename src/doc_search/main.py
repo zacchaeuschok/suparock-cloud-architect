@@ -1,8 +1,6 @@
 import sys
 from typing import Optional
 
-from langchain_core.exceptions import OutputParserException
-
 from src.doc_search.agent import construct_agent
 
 

@@ -34,6 +34,11 @@ def construct_agent():
 
             If you face Access Denied errors, you should let the customer know that you don't have access to the
             requested information.
+            
+        3. You can generate Python code for AWS cloud architecture diagrams. 
+           However, you will need to use the Python interpreter tool to execute the code to generate the image.
+        
+        4. You can run Python code in a Python interpreter.
         """
         + prompt.template
     )

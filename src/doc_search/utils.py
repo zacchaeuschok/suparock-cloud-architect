@@ -19,7 +19,7 @@ def extract_text_from_pdf(file_path):
 
 def chunk_text(text, max_length=1000):
     """Chunk text into segments of up to max_length characters."""
-    return [text[i : i + max_length] for i in range(0, len(text), max_length)]
+    return [text[i: i + max_length] for i in range(0, len(text), max_length)]
 
 
 def encode_text(text):
@@ -31,15 +31,12 @@ def encode_text(text):
     )
 
 
-def seed():
+def seed(pdf_path: str, collection_name: str):
     # Create vector store client
     vx = vecs.create_client(DB_CONNECTION)
 
     # Get or create a collection of vectors for documents
-    documents = vx.get_or_create_collection(name="document_vectors", dimension=1024)
-
-    # Path to the PDF file
-    pdf_path = "./docs/AWS_Well-Architected_Framework.pdf"
+    documents = vx.get_or_create_collection(name=collection_name, dimension=1024)
 
     # Extract text from the PDF
     pdf_text = extract_text_from_pdf(pdf_path)
@@ -63,3 +60,9 @@ def seed():
     # Index the collection for fast search performance
     documents.create_index()
     print("Created index")
+
+
+if __name__ == "__main__":
+    seed(pdf_path="./src/docs/aws_documentation.pdf", collection_name="aws_documentation_vectors")
+    seed(pdf_path="./src/docs/diagrams_documentation.pdf", collection_name="diagram_documentation_vectors")
+
