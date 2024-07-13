@@ -20,7 +20,7 @@ def construct_agent():
             This is only relevant if you need to provide best practices.
 
         2.  You can run CLI commands using the aws_cli_tool to retrieve information about the customer's AWS setup.
-            You should install the AWS CLI and configure it with the necessary permissions:
+            If AWS is not found, you should install the AWS CLI and configure it with the necessary permissions:
             
             curl "https://awscli.amazonaws.com/AWSCLIV2.pkg" -o "AWSCLIV2.pkg"
             sudo installer -pkg AWSCLIV2.pkg -target /
