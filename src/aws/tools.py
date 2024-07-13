@@ -191,6 +191,29 @@ def aws_cloud_diagram_code_function(query: str) -> Dict[str, Any]:
         3. Do not add license information to the output code.
         4. Do not include colab code in the output.
         5. Ensure all the requirements in the question are met.
+        
+        If dependencies are required, you can install them using the following code:
+        
+        ```
+        import subprocess
+        import sys
+        
+        def install_diagrams():
+            # Build the pip install command
+            command = [sys.executable, "-m", "pip", "install", "diagrams"]
+            
+            # Run the command
+            result = subprocess.run(command, capture_output=True, text=True)
+            
+            # Print output and error if any
+            if result.returncode == 0:
+                print("Installation successful:", result.stdout)
+            else:
+                print("Error during installation:", result.stderr)
+        
+        # Execute the function
+        install_diagrams()
+        ```
 
         Question:
         {question}
