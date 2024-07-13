@@ -23,6 +23,8 @@ langchain-aws = "^0.1.10"
 pypdf = "^4.2.0"
 langchain-experimental = "^0.0.62"
 streamlit = "^1.36.0"
+supabase = "^2.5.1"
+pymupdf = "^1.24.7"
 
 [tool.poetry.scripts]
 seed_text = "src.aws.main:seed"

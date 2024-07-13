@@ -40,6 +40,22 @@ def construct_agent():
         
         4. You can run Python code in a Python interpreter using the python_interpeter_tool. 
            You should install any required libraries before running the code.
+           If your code generates an image, you should return the path of the file generated as output.
+           
+           For the diagrams library, the image path is defined as such:
+    
+           ```
+           with Diagram(<image_path>, show=False, outformat="png"):
+           ```
+           
+           For example, the image path defined for the code has been transformed from
+           Standard Kubernetes App to "standard_kubernetes_app.png"
+
+           ```
+           with Diagram("Standard Kubernetes App", show=False, outformat="png"):
+           ```    
+           
+           Therefore, your image path should be formatted with snake path and lowercase e.g. standard_kubernetes_ap.png
         """
         + prompt.template
     )

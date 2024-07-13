@@ -1,9 +1,34 @@
+import glob
 import os
-import streamlit as st
-from src.aws.main import search
-from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
+import re
 
-st.title("AWS Architect")
+import streamlit as st
+from langchain.callbacks.streamlit import StreamlitCallbackHandler
+
+from src.aws.main import search
+
+st.title("👩🏻‍💻Suparock AWS Architect 🚀")
+
+# Sidebar formatting with Markdown and emojis
+st.sidebar.title("🛠️ About Suparock")
+st.sidebar.markdown("""
+Suparock is designed to assist users with AWS architecture queries. The agent is capable of:
+
+- 🖥️ Running **AWS CLI commands** to fetch configuration and setup details.
+- 📘 Referencing best practices from **AWS Well-Architected Framework**.
+- 🐍 Generating **AWS cloud architecture diagrams**.
+
+Users can input their queries and the AWS architect will process these using the appropriate tools, returning information and visual diagrams where applicable.
+""")
+
+# Add some spacing and visual appeal to sidebar options
+st.sidebar.markdown("---")
+st.sidebar.header("🔧 Utilities")
+if st.sidebar.button('🔄 Reset Application'):
+    for file_path in glob.glob('*.png'):
+        os.remove(file_path)
+    st.rerun()
+
 
 # Initialize chat history if not already in session state
 if "messages" not in st.session_state:
@@ -38,16 +63,18 @@ if prompt := st.chat_input("What is my AWS bill for July 2024?"):
     if response and "output" in response:
         message_data = {"role": "assistant", "content": response["output"]}
 
-        # Check if the image was generated and saved locally
-        image_path = 'tmp.png'
-        if os.path.exists(image_path):
-            message_data["image"] = image_path
+        # Attempt to extract an image path from the output
+        image_path_match = re.search(r'"?([\w/\\]+\.png)"?', response["output"])
+        if image_path_match:
+            image_path = image_path_match.group(1)
+            if os.path.exists(image_path):
+                message_data["image"] = image_path
 
         st.session_state.messages.append(message_data)
         with st.chat_message("assistant", avatar=avatars["assistant"]):
             st.markdown(response["output"])
-            if os.path.exists(image_path):
-                st.image(image_path)
+            if "image" in message_data:
+                st.image(message_data["image"])
     else:
         error_message = "Sorry, I could not process your request."
         st.session_state.messages.append({"role": "assistant", "content": error_message})

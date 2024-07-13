@@ -4,32 +4,23 @@ from typing import Any, Dict
 
 import vecs
 from langchain.chains.retrieval_qa.base import RetrievalQA
-from langchain_aws import BedrockEmbeddings
 from langchain_community.tools import ShellTool
-from langchain_community.vectorstores import PGVector
+from langchain_community.vectorstores import PGVector, SupabaseVectorStore
 from langchain_core.prompts import PromptTemplate
 from langchain_experimental.utilities import PythonREPL
 from langchain_core.tools import StructuredTool
 
+from src.aws.vectorstore import get_diagrams_documentation_vector_store
 from src.model.config import DB_CONNECTION, LLM
 from src.model.embedding import get_embedding_from_titan_text, get_text_embedding_model
+from src.model.supabase_client import supabase_client
 
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
-    """Returns similar documents from a Supabase vector store based on the query"""
-    # Create vector store client
-    vx = vecs.create_client(DB_CONNECTION)
-    # Get or create a collection of vectors
-    documents = vx.get_or_create_collection(name="aws_documentation_vectors", dimension=1024)
 
-    query_emb = get_embedding_from_titan_text(
-        {
-            "inputText": query,
-        }
-    )
 
     # Query the collection
     results = documents.query(data=query_emb, limit=5, include_value=True)
@@ -117,17 +108,10 @@ aws_cli_tool = StructuredTool.from_function(
 
 
 def aws_cloud_diagram_code_function(query: str) -> Dict[str, Any]:
-    embeddings = get_text_embedding_model()
-
-    vector_store = PGVector(
-        embedding_function=embeddings,
-        connection_string=DB_CONNECTION,
-        collection_name="diagrams_documentation_vectors",
-    )
+    vector_store = get_diagrams_documentation_vector_store()
 
     retriever = vector_store.as_retriever(
-        search_type="mmr",
-        search_kwargs={'k': 5, 'fetch_k': 50},
+        search_kwargs={'k': 5},
     )
 
     # RAG template
@@ -140,7 +124,6 @@ def aws_cloud_diagram_code_function(query: str) -> Dict[str, Any]:
         3. Do not add license information to the output code.
         4. Do not include colab code in the output.
         5. Ensure all the requirements in the question are met.
-        6. You should always name the diagram as "tmp" in your code.
 
         Question:
         {question}
