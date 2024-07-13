@@ -20,8 +20,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 
 
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
-
-
     # Query the collection
     results = documents.query(data=query_emb, limit=5, include_value=True)
 
