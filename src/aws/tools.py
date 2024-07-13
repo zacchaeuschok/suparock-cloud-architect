@@ -253,6 +253,9 @@ def python_interpreter_tool_function(existing_code: str) -> Dict[str, Any]:
             print("Graphviz installation successful.")
         except subprocess.CalledProcessError as e:
             print("Failed to install Graphviz: ", e)
+            
+    install_diagrams()
+    install_graphviz()
     """
     # Combine the code ensuring no extra indentation issues
     code_to_run = textwrap.dedent(setup_code) + "\n" + textwrap.dedent(existing_code)
