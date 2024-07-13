@@ -58,6 +58,10 @@ SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
 ```
 
+You can retrieve your AWS credentials from the AWS Management Console.
+Similarly, you can retrieve your Supabase credentials by running `supabase status`
+
+
 **4. Test the application:**
 ```
 streamlit run src/app.py
