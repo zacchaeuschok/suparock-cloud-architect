@@ -42,7 +42,7 @@ for message in st.session_state.messages:
     with st.chat_message(role, avatar=avatars[role]):
         st.markdown(message["content"])
         if "image" in message:
-            st.image(message["image"], caption="Here's what I found:")
+            st.image(message["image"])
 
 # Input for new queries
 if prompt := st.chat_input("What is my AWS bill for July 2024?"):
