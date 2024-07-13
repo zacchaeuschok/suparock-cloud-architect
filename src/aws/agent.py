@@ -41,38 +41,6 @@ def construct_agent():
            However, you will need to use the Python interpreter tool to execute the code to generate the image.
         
         4. You can run Python code in a Python interpreter using the python_interpeter_tool. 
-        
-           If you face any challenges with installation of diagrams or graphviz with the python interpreter tool,
-           you should run the following set up code
-           
-           ```
-            import subprocess
-            import sys
-            import platform
-            
-            def install_diagrams():
-                command = [sys.executable, "-m", "pip", "install", "diagrams"]
-                result = subprocess.run(command, capture_output=True, text=True)
-                if result.returncode == 0:
-                    print("Installation successful:", result.stdout)
-                else:
-                    print("Error during installation:", result.stderr)
-            
-            def install_graphviz():
-                try:
-                    if platform.system() == "Linux":
-                        subprocess.run(["sudo", "apt-get", "update"], check=True)
-                        subprocess.run(["sudo", "apt-get", "install", "-y", "graphviz"], check=True)
-                    elif platform.system() == "Darwin":
-                        subprocess.run(["brew", "install", "graphviz"], check=True)
-                    print("Graphviz installation successful.")
-                except subprocess.CalledProcessError as e:
-                    print("Failed to install Graphviz: ", e)
-                    
-            install_diagrams()
-            install_graphviz()
-        ```
-        
            If your code generates an image, you should return the path of the file generated as output.
            
            For the diagrams library, the image path is defined as such:
