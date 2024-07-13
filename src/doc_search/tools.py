@@ -8,6 +8,11 @@ from langchain_core.tools import StructuredTool
 from src.model.config import DB_CONNECTION
 from src.model.embedding import get_embedding_from_titan_text
 
+import warnings
+
+# Ignore all user warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+
 
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
     """Returns similar documents from a Supabase vector store based on the query"""
@@ -37,6 +42,20 @@ well_arch_tool = StructuredTool.from_function(
 )
 
 
+def parse_aws_response(command, response):
+    """ Parses AWS CLI response, looking for JSON data or handling plain text. """
+    if isinstance(response, str):
+        if 'error' in response:
+            return {'command': command, 'error': response}
+        try:
+            parsed_response = json.loads(response)
+            return {'success': parsed_response}
+        except json.JSONDecodeError:
+            return {'success': response}
+    else:
+        return {'success': response}
+
+
 def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     """
     Executes specified AWS CLI commands and returns the parsed JSON response.
@@ -47,8 +66,6 @@ def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     Returns:
     Dict[str, Any]: The JSON parsed output of the AWS CLI command.
     """
-    print("Running AWS CLI command")
-
     # Initialize the ShellTool
     shell_tool = ShellTool()
 
@@ -56,17 +73,18 @@ def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     result = shell_tool.run(tool_input={"commands": [cli_command]})
 
     # Assuming result is returned as a JSON string from the command
-    parsed_result = json.loads(result) if type(result) is str else result
+    parsed_result = parse_aws_response(command=cli_command, response=result)
 
-    # Return the parsed result directly
     return {"aws_data": parsed_result}
 
 
 # Create a StructuredTool from the function
 aws_cli_tool = StructuredTool.from_function(
     func=aws_cli_tool_function,
-    name="Cost Analysis Tool",
+    name="AWS CLI Tool",
     description="Runs AWS CLI commands",
 )
 
-TOOLS = [well_arch_tool, aws_cli_tool]
+DOC_TOOLS = [well_arch_tool]
+CLI_TOOLS = [aws_cli_tool]
+TOOLS = DOC_TOOLS + CLI_TOOLS

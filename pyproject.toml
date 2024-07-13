@@ -28,7 +28,7 @@ langchain-experimental = "^0.0.62"
 seed_image = "src.image_search.main:seed"
 seed_text = "src.doc_search.main:seed"
 search_image = "src.image_search.main:search"
-search_text = "src.doc_search.main:search"
+search_text = "src.doc_search.main:main"
 
 [tool.poetry.group.dev.dependencies]
 setuptools = "^70.3.0"
