@@ -20,8 +20,9 @@ def construct_agent():
         1.  You can reference the AWS Well-Architected Framework for best practices using the well_arch_tool.
             This is only relevant if you need to provide best practices.
 
-        2.  You can run CLI commands using the aws_cli_tool to retrieve information about the customer's AWS setup.
-            If AWS is not found, you should install the AWS CLI and configure it with the necessary permissions:
+        2.  You can run CLI commands using the aws_cli_tool to retrieve information about the customer's AWS setup. 
+            If AWS is not found, you should install the AWS CLI and configure it with the necessary permissions to avoid 
+            using sudo:
             
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
