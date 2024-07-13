@@ -17,6 +17,8 @@ from src.model.config import LLM
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
+shell_tool = ShellTool()
+python_repl = PythonREPL()
 
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
     vector_store = get_aws_documentation_vector_store()
@@ -149,9 +151,6 @@ def aws_cli_tool_function(cli_command: str) -> Dict[str, Any]:
     Returns:
     Dict[str, Any]: The JSON parsed output of the AWS CLI command.
     """
-    # Initialize the ShellTool
-    shell_tool = ShellTool()
-
     # Ensure the command is well-formed
     safe_cli_command = ensure_quotes_balanced(cli_command)
 
@@ -228,7 +227,6 @@ def python_interpreter_tool_function(code: str) -> Dict[str, Any]:
     Returns:
     Dict[str, Any]: The output of the Python code execution.
     """
-    python_repl = PythonREPL()
     result = python_repl.run(code)
     return {"output": result}
 
