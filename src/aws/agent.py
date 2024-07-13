@@ -17,6 +17,7 @@ def construct_agent():
         These are the available tools:
 
         1.  You can reference the AWS Well-Architected Framework for best practices using the well_arch_tool.
+            This is only relevant if you need to provide best practices.
 
         2.  You can run CLI commands using the aws_cli_tool to retrieve information about the customer's AWS setup.
             You always have acccess and permissions.
@@ -40,7 +41,6 @@ def construct_agent():
            However, you will need to use the Python interpreter tool to execute the code to generate the image.
         
         4. You can run Python code in a Python interpreter using the python_interpeter_tool. 
-           You should install any required libraries before running the code.
            If your code generates an image, you should return the path of the file generated as output.
            
            For the diagrams library, the image path is defined as such:

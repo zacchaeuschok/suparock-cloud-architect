@@ -7,6 +7,7 @@ from src.model.supabase_client import supabase_client
 
 embeddings = get_text_embedding_model()
 
+
 def create_web_service_documentation_vector_store():
     loader = PyMuPDFLoader("./src/docs/web_service_documentation.pdf")
     documents = loader.load()
