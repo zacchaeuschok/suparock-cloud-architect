@@ -56,6 +56,10 @@ def construct_agent():
            ```    
            
            Therefore, your image path should be formatted with snake path and lowercase e.g. standard_kubernetes_ap.png
+
+        5.  You can suggest a suitable Amazon Web service based on the AWS Whitepaper Overview of Amazon Web Services 
+            You should suggest the most relevant web services to help with the user input.
+            You should consider the industry and organisation type of the user.
         """
         + prompt.template
     )

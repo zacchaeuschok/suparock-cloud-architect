@@ -11,6 +11,8 @@ from langchain_experimental.utilities import PythonREPL
 from langchain_core.tools import StructuredTool
 
 from src.aws.vectorstore import get_diagrams_documentation_vector_store
+from src.aws.vectorstore import get_aws_documentation_vector_store
+from src.aws.vectorstore import get_web_service_documentation_vector_store
 from src.model.config import DB_CONNECTION, LLM
 from src.model.embedding import get_embedding_from_titan_text, get_text_embedding_model
 from src.model.supabase_client import supabase_client
@@ -18,22 +20,84 @@ from src.model.supabase_client import supabase_client
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
-
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
+    vector_store = get_aws_documentation_vector_store()
 
+    retriever = vector_store.as_retriever(
+        search_kwargs={'k': 5},
+    )
 
-    # Query the collection
-    results = documents.query(data=query_emb, limit=5, include_value=True)
+    # RAG template
+    prompt_RAG = """
+        You are an expert in the AWS Well-Architected Framework.
 
-    # Format results for output
-    resp_json = {"docs": [result for result in results]}
-    return resp_json
+        Respond with the most relevant sections of the AWS Well-Architected Framework documentation based on the question below. Ensure your response is accurate and provides best practices.
 
+        Question:
+        {question}
+
+        Context:
+        {context}
+
+        """
+
+    prompt_RAG_tempate = PromptTemplate(
+        template=prompt_RAG, input_variables=["context", "question"]
+    )
+
+    qa_chain = RetrievalQA.from_llm(
+        llm=LLM, prompt=prompt_RAG_tempate, retriever=retriever, return_source_documents=True
+    )
+
+    response = qa_chain.invoke({"query": query})
+
+    return {"code": response}
 
 well_arch_tool = StructuredTool.from_function(
     func=well_arch_tool_function,
     name="Well Arch Tool",
     description="Returns text from AWS Well-Architected Framework related to the query",
+)
+
+
+def web_service_search_function(query: str) -> Dict[str, Any]:
+    vector_store = get_web_service_documentation_vector_store()
+
+    retriever = vector_store.as_retriever(
+        search_kwargs={'k': 5},
+    )
+
+    # RAG template
+    prompt_RAG = """
+        You are an expert in providing Amazon Web Services based on the AWS Whitepaper Overview of Amazon Web Services.
+
+        Respond with the most relevant sections of the AWS Whitepaper documentation based on the question below. 
+        Ensure your response is accurate and provides the most suitable web services for the user.
+
+        Question:
+        {question}
+
+        Context:
+        {context}
+
+        """
+
+    prompt_RAG_tempate = PromptTemplate(
+        template=prompt_RAG, input_variables=["context", "question"]
+    )
+
+    qa_chain = RetrievalQA.from_llm(
+        llm=LLM, prompt=prompt_RAG_tempate, retriever=retriever, return_source_documents=True
+    )
+
+    response = qa_chain.invoke({"query": query})
+
+    return {"code": response}
+
+web_sercive_search_tool = StructuredTool.from_function(
+    func=web_service_search_function,
+    name="web service search function",
+    description="Selects the most suitable AWS web service based on the user input",
 )
 
 

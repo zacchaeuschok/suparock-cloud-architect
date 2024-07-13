@@ -7,6 +7,31 @@ from src.model.supabase_client import supabase_client
 
 embeddings = get_text_embedding_model()
 
+def create_web_service_documentation_vector_store():
+    loader = PyMuPDFLoader("./src/docs/web_service_documentation.pdf")
+    documents = loader.load()
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    docs = text_splitter.split_documents(documents)
+
+    vector_store = SupabaseVectorStore.from_documents(
+        docs,
+        embeddings,
+        client=supabase_client,
+        table_name="web_service_documents",
+        query_name="match_web_service_documents",
+        chunk_size=500,
+    )
+    return vector_store
+
+
+def get_web_service_documentation_vector_store():
+    return SupabaseVectorStore(
+        embedding=embeddings,
+        client=supabase_client,
+        table_name="web_service_documents",
+        query_name="match_web_service_documents",
+    )
+
 
 def create_diagrams_documentation_vector_store():
     loader = PyMuPDFLoader("./src/docs/diagrams_documentation.pdf")
@@ -45,7 +70,7 @@ def create_aws_documentation_vector_store():
         embeddings,
         client=supabase_client,
         table_name="aws_documents",
-        query_name="match_diagrams_documents",
+        query_name="match_aws_documents",
         chunk_size=500,
     )
     return vector_store
@@ -64,3 +89,4 @@ if __name__ == "__main__":
     print("Creating vector stores")
     create_diagrams_documentation_vector_store()
     create_aws_documentation_vector_store()
+    create_web_service_documentation_vector_store()
