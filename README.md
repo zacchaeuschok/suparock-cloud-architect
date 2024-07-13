@@ -22,8 +22,8 @@ Before you begin, ensure you have the following installed:
 **1. Clone the repository**
 
 ```
-git clone https://github.com/yourusername/your-repository.git
-cd your-repository
+git clone https://github.com/zacchaeuschok/suparock-cloud-architect
+cd suparock-cloud-architect
 ```
 
 **2. Install dependencies**
@@ -35,7 +35,6 @@ poetry install
 **3. Set up database:**
 ```
 supabase start
-poetry run seed_image
 poetry run seed_text
 ```
 
@@ -45,12 +44,13 @@ Create a .env file in the root directory and populate it with your AWS and Supab
 ```
 AWS_ACCESS_KEY_ID=your_access_key
 AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_SECRET_ACCESS_KEY=your_secret_key
+AWS_SESSION_TOKEN=your_session_token
 SUPABASE_URL=your_supabase_url
 SUPABASE_KEY=your_supabase_key
 ```
 
 **4. Test the application:**
 ```
-poetry run search_image "Person lying down on grass"
-poetry run search_text "Should I use a single or multiple AWS accounts?"
+streamlit run src/app.py
 ```

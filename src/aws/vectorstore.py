@@ -86,8 +86,12 @@ def get_aws_documentation_vector_store():
     )
 
 
-if __name__ == "__main__":
+def main():
     print("Creating vector stores")
-    # create_diagrams_documentation_vector_store()
-    # create_aws_documentation_vector_store()
+    create_diagrams_documentation_vector_store()
+    create_aws_documentation_vector_store()
     create_web_service_documentation_vector_store()
+
+
+if __name__ == "__main__":
+    main()

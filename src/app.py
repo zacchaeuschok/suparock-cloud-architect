@@ -15,6 +15,7 @@ Suparock is designed to assist users with AWS architecture queries. The agent is
 - 🖥️ Running **AWS CLI commands** to fetch configuration and setup details.
 - 📘 Referencing best practices from **AWS Well-Architected Framework**.
 - 🐍 Generating **AWS cloud architecture diagrams**.
+
 Users can input their queries, and the AWS architect will process these using the appropriate tools, returning information and visual diagrams where applicable.
 """)
 st.sidebar.markdown("---")
