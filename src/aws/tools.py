@@ -235,6 +235,7 @@ def python_interpeter_tool_function(code: str) -> Dict[str, Any]:
         """
         import subprocess
         import sys
+        import platform
         
         def install_diagrams():
             # Build the pip install command
@@ -248,9 +249,21 @@ def python_interpeter_tool_function(code: str) -> Dict[str, Any]:
                 print("Installation successful:", result.stdout)
             else:
                 print("Error during installation:", result.stderr)
-        
+                
+        def install_graphviz():
+        try:
+            if platform.system() == "Linux":
+                subprocess.run(["sudo", "apt-get", "update"], check=True)
+                subprocess.run(["sudo", "apt-get", "install", "-y", "graphviz"], check=True)
+            elif platform.system() == "Darwin":  # macOS
+                subprocess.run(["brew", "install", "graphviz"], check=True)
+            print("Graphviz installation successful.")
+        except subprocess.CalledProcessError as e:
+            print("Failed to install Graphviz: ", e)
+
         # Execute the function
         install_diagrams()
+        install_graphviz()
         """
     )
     result = python_repl.run(code)
