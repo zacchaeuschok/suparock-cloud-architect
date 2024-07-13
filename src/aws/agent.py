@@ -20,8 +20,7 @@ def construct_agent():
             This is only relevant if you need to provide best practices.
 
         2.  You can run CLI commands using the aws_cli_tool to retrieve information about the customer's AWS setup.
-            You always have acccess and permissions.
-            You already have the AWS CLI installed on your machine and can run any command.
+            You should install the AWS CLI and configure it with the necessary permissions.
             You have access to actual AWS CLI commands and can use them to retrieve information.
             Your commands should not include generic variables and must work without expecting user input.
             You should check that your commands are well-formed and correct.
