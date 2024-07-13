@@ -2,10 +2,8 @@ import json
 import warnings
 from typing import Any, Dict
 
-import vecs
 from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.tools import ShellTool
-from langchain_community.vectorstores import PGVector, SupabaseVectorStore
 from langchain_core.prompts import PromptTemplate
 from langchain_experimental.utilities import PythonREPL
 from langchain_core.tools import StructuredTool
@@ -13,9 +11,7 @@ from langchain_core.tools import StructuredTool
 from src.aws.vectorstore import get_diagrams_documentation_vector_store
 from src.aws.vectorstore import get_aws_documentation_vector_store
 from src.aws.vectorstore import get_web_service_documentation_vector_store
-from src.model.config import DB_CONNECTION, LLM
-from src.model.embedding import get_embedding_from_titan_text, get_text_embedding_model
-from src.model.supabase_client import supabase_client
+from src.model.config import LLM
 
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
@@ -99,7 +95,7 @@ def web_service_search_function(query: str) -> Dict[str, Any]:
 
 web_service_search_tool = StructuredTool.from_function(
     func=web_service_search_function,
-    name="web service search function",
+    name="Web Service Search Tool",
     description="Selects the most suitable AWS web service based on the user input",
 )
 
@@ -277,4 +273,4 @@ python_interpeter_tool = StructuredTool.from_function(
     description="Runs python code",
 )
 
-TOOLS = [well_arch_tool, aws_cli_tool, aws_cloud_diagram_code_tool, python_interpeter_tool]
+TOOLS = [well_arch_tool, aws_cli_tool, aws_cloud_diagram_code_tool, python_interpeter_tool, web_service_search_tool]
