@@ -1,14 +1,20 @@
-### AWS Suapbase Hackathon
+## AWS Suapbase Hackathon
 
-This application demonstrates how to use Supabase for vector search and AWS services to perform image search tasks. The system leverages AWS’s powerful Bedrock model for generating embeddings and Supabase to store and retrieve these embeddings efficiently.
+---
+**Cloud Architect Agent**
+Suparock Cloud Architect Agent assists users with AWS architecture management. It integrates directly with AWS services using the CLI, suggests best practices based on the AWS Well-Architected Framework and recommends relevant AWS web services. The agent can autonomously execute AWS CLI commands and generate dynamic cloud architecture diagrams, proving to be an intuitive companion for software engineers aiming to understand their cloud environment.
 
-Features
+![Flow Diagram](public/flow_diagram.png)
 
-- Image Embedding: Converts images into vector embeddings using AWS’s Bedrock model.
-- Vector Storage: Utilizes Supabase’s vector capabilities to store and query image embeddings.
-- Search Functionality: Allows users to search for images based on vector similarity.
+**Tech Stack**
+- **Text Embedding Model**: Amazon Titan Text Embedding v2
+- **Agent Model**: Anthropic Claude 3 Sonnet
+- **Amazon Bedrock**: Serving foundation models
+- **Database**: Supabase for vector storage
+- **LangChain**: Manages agent orchestration and the Retrieval-Augmented Generation (RAG) pipeline
 
-Prerequisites
+
+**Prerequisites**
 
 Before you begin, ensure you have the following installed:
 
