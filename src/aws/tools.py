@@ -264,7 +264,7 @@ def python_interpeter_tool_function(code: str) -> Dict[str, Any]:
         
         # Execute the function
         install_diagrams()
-        install_graphviz()c
+        install_graphviz()
         """
     )
     result = python_repl.run(code)
