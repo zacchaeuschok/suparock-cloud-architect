@@ -1,4 +1,5 @@
 import json
+import textwrap
 import warnings
 from typing import Any, Dict
 
@@ -217,60 +218,54 @@ aws_cloud_diagram_code_tool = StructuredTool.from_function(
 )
 
 
-def python_interpeter_tool_function(code: str) -> Dict[str, Any]:
+def python_interpreter_tool_function(existing_code: str) -> Dict[str, Any]:
     """
     Runs the provided Python code in a Python interpreter and returns the output.
 
     Args:
-    code (str): The Python code to be executed.
+    existing_code (str): The Python code to be executed.
 
     Returns:
     Dict[str, Any]: The output of the Python code execution.
     """
     python_repl = PythonREPL()
-    python_repl.run(
-        """
-        import subprocess
-        import sys
-        import platform
-        
-        def install_diagrams():
-            # Build the pip install command
-            command = [sys.executable, "-m", "pip", "install", "diagrams"]
-            
-            # Run the command
-            result = subprocess.run(command, capture_output=True, text=True)
-            
-            # Print output and error if any
-            if result.returncode == 0:
-                print("Installation successful:", result.stdout)
-            else:
-                print("Error during installation:", result.stderr)
-                
-        def install_graphviz():
-            try:
-                if platform.system() == "Linux":
-                    subprocess.run(["sudo", "apt-get", "update"], check=True)
-                    subprocess.run(["sudo", "apt-get", "install", "-y", "graphviz"], check=True)
-                elif platform.system() == "Darwin":  # macOS
-                    subprocess.run(["brew", "install", "graphviz"], check=True)
-                print("Graphviz installation successful.")
-            except subprocess.CalledProcessError as e:
-                print("Failed to install Graphviz: ", e)
-        
-        # Execute the function
-        install_diagrams()
-        install_graphviz()
-        """
-    )
-    result = python_repl.run(code)
+    # Prepend setup and installation commands to the existing code
+    setup_code = """
+    import subprocess
+    import sys
+    import platform
+
+    def install_diagrams():
+        command = [sys.executable, "-m", "pip", "install", "diagrams"]
+        result = subprocess.run(command, capture_output=True, text=True)
+        if result.returncode == 0:
+            print("Installation successful:", result.stdout)
+        else:
+            print("Error during installation:", result.stderr)
+
+    def install_graphviz():
+        try:
+            if platform.system() == "Linux":
+                subprocess.run(["sudo", "apt-get", "update"], check=True)
+                subprocess.run(["sudo", "apt-get", "install", "-y", "graphviz"], check=True)
+            elif platform.system() == "Darwin":
+                subprocess.run(["brew", "install", "graphviz"], check=True)
+            print("Graphviz installation successful.")
+        except subprocess.CalledProcessError as e:
+            print("Failed to install Graphviz: ", e)
+    """
+    # Combine the code ensuring no extra indentation issues
+    code_to_run = textwrap.dedent(setup_code) + "\n" + textwrap.dedent(existing_code)
+
+    # Run the combined script
+    result = python_repl.run(code_to_run)
     return {"output": result}
 
 
-python_interpeter_tool = StructuredTool.from_function(
-    func=python_interpeter_tool_function,
+python_interpreter_tool = StructuredTool.from_function(
+    func=python_interpreter_tool_function,
     name="Python Interpreter Tool",
     description="Runs python code",
 )
 
-TOOLS = [well_arch_tool, aws_cli_tool, aws_cloud_diagram_code_tool, python_interpeter_tool, web_service_search_tool]
+TOOLS = [well_arch_tool, aws_cli_tool, aws_cloud_diagram_code_tool, python_interpreter_tool, web_service_search_tool]
