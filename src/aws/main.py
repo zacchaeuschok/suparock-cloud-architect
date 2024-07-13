@@ -6,7 +6,7 @@ from src.aws.agent import construct_agent
 
 def search(query_term: Optional[str] = None, callbacks=None):
     agent_executor = construct_agent()
-    config = {"recursion_limit": 10}
+    config = {"recursion_limit": 25}
     result = agent_executor.invoke(
         {
             "input": query_term,

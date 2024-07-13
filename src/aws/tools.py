@@ -220,8 +220,46 @@ aws_cloud_diagram_code_tool = StructuredTool.from_function(
     func=aws_cloud_diagram_code_function,
 )
 
+
+def python_interpeter_tool_function(code: str) -> Dict[str, Any]:
+    """
+    Runs the provided Python code in a Python interpreter and returns the output.
+
+    Args:
+    code (str): The Python code to be executed.
+
+    Returns:
+    Dict[str, Any]: The output of the Python code execution.
+    """
+    python_repl = PythonREPL()
+    python_repl.run(
+        """
+        import subprocess
+        import sys
+        
+        def install_diagrams():
+            # Build the pip install command
+            command = [sys.executable, "-m", "pip", "install", "diagrams"]
+            
+            # Run the command
+            result = subprocess.run(command, capture_output=True, text=True)
+            
+            # Print output and error if any
+            if result.returncode == 0:
+                print("Installation successful:", result.stdout)
+            else:
+                print("Error during installation:", result.stderr)
+        
+        # Execute the function
+        install_diagrams()
+        """
+    )
+    result = python_repl.run(code)
+    return {"output": result}
+
+
 python_interpeter_tool = StructuredTool.from_function(
-    func=PythonREPL().run,
+    func=python_interpeter_tool_function,
     name="Python Interpreter Tool",
     description="Runs python code",
 )
