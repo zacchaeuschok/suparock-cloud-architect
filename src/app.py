@@ -1,6 +1,6 @@
 import os
 import streamlit as st
-from src.doc_search.main import search
+from src.aws_tool.main import search
 from langchain_community.callbacks.streamlit import StreamlitCallbackHandler
 
 st.title("AWS Architect")

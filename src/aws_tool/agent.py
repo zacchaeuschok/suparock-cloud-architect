@@ -1,7 +1,7 @@
 from langchain import hub
 from langchain.agents import create_react_agent, AgentExecutor
 
-from src.doc_search.tools import TOOLS
+from src.aws_tool.tools import TOOLS
 from src.model.config import LLM
 
 
