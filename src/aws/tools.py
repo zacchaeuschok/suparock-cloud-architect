@@ -20,6 +20,7 @@ from src.model.supabase_client import supabase_client
 # Ignore all user warnings
 warnings.filterwarnings("ignore", category=UserWarning)
 
+
 def well_arch_tool_function(query: str) -> Dict[str, Any]:
     vector_store = get_aws_documentation_vector_store()
 
@@ -52,6 +53,7 @@ def well_arch_tool_function(query: str) -> Dict[str, Any]:
     response = qa_chain.invoke({"query": query})
 
     return {"code": response}
+
 
 well_arch_tool = StructuredTool.from_function(
     func=well_arch_tool_function,
@@ -93,6 +95,7 @@ def web_service_search_function(query: str) -> Dict[str, Any]:
     response = qa_chain.invoke({"query": query})
 
     return {"code": response}
+
 
 web_sercive_search_tool = StructuredTool.from_function(
     func=web_service_search_function,
@@ -216,7 +219,6 @@ aws_cloud_diagram_code_tool = StructuredTool.from_function(
     description="Generates python code for cloud architecture diagrams based on the query",
     func=aws_cloud_diagram_code_function,
 )
-
 
 python_interpeter_tool = StructuredTool.from_function(
     func=PythonREPL().run,
