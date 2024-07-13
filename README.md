@@ -5,7 +5,7 @@ _Submission for AWSupabase GenAI Hackathon_
 
 Suparock Cloud Architect Agent assists users with AWS architecture management. It integrates directly with AWS services using the CLI, suggests best practices based on the AWS Well-Architected Framework and recommends relevant AWS web services. The agent can autonomously execute AWS CLI commands and generate dynamic cloud architecture diagrams, proving to be an intuitive companion for software engineers aiming to understand their cloud environment.
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/F4z19IFjAP8" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+[![Demo](http://img.youtube.com/vi/F4z19IFjAP8/0.jpg)](https://www.youtube.com/embed/F4z19IFjAP8 "Demo Video")
 
 **Tech Stack**
 - **Text Embedding Model**: Amazon Titan Text Embedding v2
