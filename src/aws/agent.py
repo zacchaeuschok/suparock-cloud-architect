@@ -40,8 +40,30 @@ def construct_agent():
            However, you will need to use the Python interpreter tool to execute the code to generate the image.
         
         4. You can run Python code in a Python interpreter using the python_interpeter_tool. 
-           You should install any required libraries before running the code.
            If your code generates an image, you should return the path of the file generated as output.
+           
+           If you are facing difficulties install the required libraries, you can use the following code:
+           
+            ```
+            import subprocess
+            import sys
+            
+            def install_diagrams():
+                # Build the pip install command
+                command = [sys.executable, "-m", "pip", "install", "diagrams"]
+                
+                # Run the command
+                result = subprocess.run(command, capture_output=True, text=True)
+                
+                # Print output and error if any
+                if result.returncode == 0:
+                    print("Installation successful:", result.stdout)
+                else:
+                    print("Error during installation:", result.stderr)
+            
+            # Execute the function
+            install_diagrams()
+            ```
            
            For the diagrams library, the image path is defined as such:
     
